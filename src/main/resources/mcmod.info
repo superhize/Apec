@@ -1,17 +1,17 @@
 [
   {
-	"modid": "examplemod",
-	"name": "Xample Mod",
-	"description": "A mod that is used as an example.",
-	"version": "1.0.0",
+	"modid": "apec",
+	"name": "Apec",
+	"description": "A mod the changes the game's gui for a better experience in hypixel skyblock.",
+	"version": "${version}",
 	"mcversion": "1.8.9",
-	"url": "https://github.com/romangraef/Forge1.8.9Template/",
+	"url": "",
 	"updateUrl": "",
 	"authorList": [
-	  "You"
+	  "BananaFructa"
 	],
-	"credits": "",
-	"logoFile": "",
+	"credits": "xCyndi, tea and Glenz - Artist Team, Johnny#4567 - Allowed us to use his item tool tip design",
+	"logoFile": "apecLogo.png",
 	"screenshots": [],
 	"dependencies": []
   }
