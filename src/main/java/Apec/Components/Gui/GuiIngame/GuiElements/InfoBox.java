@@ -59,7 +59,7 @@ public class InfoBox extends GUIComponent {
             if (!ApecMain.Instance.settingsManager.getSettingState(SettingID.USE_DEFENCE_OUT_OF_BB) || editingMode) {
                 gi.drawTexturedModalRect((int) (GuiPos.x + 20 + (subComponentDeltas.get(3).getX()) * oneOverScale + 360),  (GuiPos.y + subComponentDeltas.get(3).getY()) * oneOverScale - 1, 32, 215, 7, 10);
             }
-            gi.drawTexturedModalRect((int) (GuiPos.x + 20 + (subComponentDeltas.get(5).getX()) * oneOverScale + 460),  (GuiPos.y + subComponentDeltas.get(5).getY()) * oneOverScale - 1, 41, 216, 6, 9);
+            gi.drawTexturedModalRect((int) (GuiPos.x + 20 + (subComponentDeltas.get(5).getX()) * oneOverScale + 460),  (GuiPos.y + subComponentDeltas.get(5).getY()) * oneOverScale - 1, 40, 216, 6, 9);
         }
         GlStateManager.scale(1,1,1);
     }
