@@ -25,15 +25,11 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.lwjgl.Sys;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+@SuppressWarnings("all")
 public class DataExtractor {
 
     private Minecraft mc = Minecraft.getMinecraft();
@@ -87,12 +83,16 @@ public class DataExtractor {
     private final String combatZoneName = "the catacombs";
     private final String clearedName = "dungeon cleared";
 
+    private final String gardenZone = "the garden";
+
     private boolean usesPiggyBank = false;
 
     private boolean hasSentATradeRequest = false;
     private boolean hasRecievedATradeRequest = false;
 
     public boolean isInTheCatacombs = false;
+
+    public boolean isInGarden;
     private boolean wasInTheCatacombs = false;
 
     public boolean IsDeadInTheCatacombs = false;
@@ -329,6 +329,13 @@ public class DataExtractor {
     }
 
     /**
+     * @param s = Input string
+     * @return Return true if the input string represents the coppers counter
+     */
+    public boolean RepresentsCooper(String s) {
+        return ApecUtils.containedByCharSequence(s,"Copper: ");
+    }
+    /**
      * ScoreBoardData - Contains the things that used to be displayed in the scoreboard
      * -server
      * -in game date and time
@@ -351,6 +358,7 @@ public class DataExtractor {
                 if (ApecUtils.containedByCharSequence(scoreBoardLines.get(size-i).toLowerCase(),combatZoneName) && !scoreBoardLines.get(size-i).toLowerCase().contains("to")) {
                     isInTheCatacombs = true;
                 }
+
             }
 
             ScoreboardParser(scoreBoardData, scoreBoardLines);
@@ -442,6 +450,7 @@ public class DataExtractor {
     private void ScoreboardParser(ScoreBoardData sd,List<String> l) {
 
         boolean BitsHaveBeenSet = false;
+        boolean CoopersHaveBeenSet = false;
         List<String> rl = Lists.reverse(l);
         for (String line : rl) {
             if (RepresentsIRLDate(line)) {
@@ -462,8 +471,13 @@ public class DataExtractor {
                 usesPiggyBank = true;
             }
             else if (RepresentsBits(line)) {
+                //System.out.println("bitsering");
                 sd.Bits = ApecUtils.removeFirstSpaces(line);
                 BitsHaveBeenSet = true;
+            }
+            else if(RepresentsCooper(line)){
+               // System.out.println("trueing");
+                sd.Coppers = ApecUtils.removeFirstSpaces(line);
             }
             else if (!line.contains("www")) {
                 if (line.replaceAll("[^a-zA-Z0-9]", "").length() != 0) {
@@ -890,6 +904,7 @@ public class DataExtractor {
         public String Server = "";
         public String Purse = "Purse: \u00a760";
         public String Bits = "Bits: \u00a7b0";
+        public String Coppers = "Copper: \u00a7b0";
         public List<String> ExtraInfo = new ArrayList<String>();
         public String Zone = "";
         public String Date = "";

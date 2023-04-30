@@ -20,17 +20,19 @@ import java.util.List;
 
 public class ApecUtils {
 
-    /** If you are in a fml workspace set this variable to true */
+    /**
+     * If you are in a fml workspace set this variable to true
+     */
     public static boolean inFMLFramework = false;
 
-    private static String[] colorCodes = { "\u00a70","\u00a71","\u00a72","\u00a73","\u00a74","\u00a75","\u00a76","\u00a77","\u00a78","\u00a79","\u00a7a","\u00a7b","\u00a7c","\u00a7d","\u00a7e","\u00a7f" };
+    private static String[] colorCodes = {"\u00a70", "\u00a71", "\u00a72", "\u00a73", "\u00a74", "\u00a75", "\u00a76", "\u00a77", "\u00a78", "\u00a79", "\u00a7a", "\u00a7b", "\u00a7c", "\u00a7d", "\u00a7e", "\u00a7f"};
 
-    private static HashMap <String,Integer> multipleNotations = new HashMap<String, Integer>() {{
-            put("k",1000);
-            put("m",1000000);
+    private static HashMap<String, Integer> multipleNotations = new HashMap<String, Integer>() {{
+        put("k", 1000);
+        put("m", 1000000);
     }};
 
-    public static HashMap<String,String> unObfedFieldNames = new HashMap<String,String>() {{
+    public static HashMap<String, String> unObfedFieldNames = new HashMap<String, String>() {{
         if (!inFMLFramework) {
             put("footer", "field_175255_h");
             put("header", "field_175256_i");
@@ -43,29 +45,29 @@ public class ApecUtils {
             put("overlayPlayerList", "field_175196_v");
             put("guiIngame", "field_175251_g");
             put("chatMessages", "field_146253_i");
-            put("theSlot","field_147006_u");
-            put("stackTagCompound","field_77990_d");
+            put("theSlot", "field_147006_u");
+            put("stackTagCompound", "field_77990_d");
         }
     }};
 
-    private static HashMap<String,Field> reflectionFieldCache = new HashMap<String, Field>();
+    private static HashMap<String, Field> reflectionFieldCache = new HashMap<String, Field>();
 
-    public static HashMap<String,String> getUnObfedMethodNames = new HashMap<String, String>() {{
+    public static HashMap<String, String> getUnObfedMethodNames = new HashMap<String, String>() {{
         if (!inFMLFramework) {
             put("handleMouseClick", "func_146984_a");
-            put("drawItemStack","func_146982_a");
-            put("drawGradientRect","func_73733_a");
+            put("drawItemStack", "func_146982_a");
+            put("drawGradientRect", "func_73733_a");
         }
     }};
 
     public static <T> T readDeclaredField(Class<?> targetType, Object target, String name) {
         try {
             if (reflectionFieldCache.containsKey(name)) {
-                return (T)reflectionFieldCache.get(name).get(target);
+                return (T) reflectionFieldCache.get(name).get(target);
             } else {
                 Field f = targetType.getDeclaredField(unObfedFieldNames.getOrDefault(name, name));
                 f.setAccessible(true);
-                return (T)f.get(target);
+                return (T) f.get(target);
             }
         } catch (Exception err) {
             err.printStackTrace();
@@ -75,9 +77,9 @@ public class ApecUtils {
 
     public static void writeDeclaredField(Class<?> targetType, Object target, String name, Object value) {
         try {
-            Field f = targetType.getDeclaredField(unObfedFieldNames.getOrDefault(name,name));
+            Field f = targetType.getDeclaredField(unObfedFieldNames.getOrDefault(name, name));
             f.setAccessible(true);
-            f.set(target,value);
+            f.set(target, value);
         } catch (Exception err) {
             err.printStackTrace();
         }
@@ -85,7 +87,7 @@ public class ApecUtils {
 
     public static Method getDeclaredMethod(Class<?> targetClass, String name, Class<?>... parameters) {
         try {
-            Method m = targetClass.getDeclaredMethod(getUnObfedMethodNames.getOrDefault(name,name),parameters);
+            Method m = targetClass.getDeclaredMethod(getUnObfedMethodNames.getOrDefault(name, name), parameters);
             m.setAccessible(true);
             return m;
         } catch (Exception err) {
@@ -101,7 +103,7 @@ public class ApecUtils {
 
     public static String removeAllCodes(String s) {
         while (s.contains("\u00a7")) {
-            s = s.replace("\u00a7"+s.charAt(s.indexOf("\u00a7") + 1),"");
+            s = s.replace("\u00a7" + s.charAt(s.indexOf("\u00a7") + 1), "");
         }
         return s;
     }
@@ -111,7 +113,7 @@ public class ApecUtils {
      * @return Returns true if the specified vector has a magnitude of 0
      */
 
-    public static boolean zeroMagnitude (Vector2f v) {
+    public static boolean zeroMagnitude(Vector2f v) {
         return v.x == 0 && v.y == 0;
     }
 
@@ -122,8 +124,8 @@ public class ApecUtils {
 
     public static String removeColorCodes(String s) {
         for (String code : colorCodes) {
-            s = s.replace(code,"\u00a7r");
-            s = s.replace(code.toUpperCase(),"\u00a7r");
+            s = s.replace(code, "\u00a7r");
+            s = s.replace(code.toUpperCase(), "\u00a7r");
         }
         return s;
     }
@@ -134,26 +136,26 @@ public class ApecUtils {
      * @return Returns the sum of the 2 vectors
      */
 
-    public static Vector2f addVec (Vector2f a,Vector2f b) {
-        return new Vector2f(a.x+b.x,a.y+b.y);
+    public static Vector2f addVec(Vector2f a, Vector2f b) {
+        return new Vector2f(a.x + b.x, a.y + b.y);
     }
 
-    public static Vector2f scalarMultiply (Vector2f v, float s) {
-        return new Vector2f(v.x*s,v.y*s);
+    public static Vector2f scalarMultiply(Vector2f v, float s) {
+        return new Vector2f(v.x * s, v.y * s);
     }
 
-    public static Vector2f subVec(Vector2f a,Vector2f b) {
-        return new Vector2f(a.x - b.x,a.y - b.y);
+    public static Vector2f subVec(Vector2f a, Vector2f b) {
+        return new Vector2f(a.x - b.x, a.y - b.y);
     }
 
     /**
-     * @brief Shown the specified message in the chat if debug messages are on
      * @param string = Input message
+     * @brief Shown the specified message in the chat if debug messages are on
      */
 
     public static void showMessage(String string) {
         if (ApecMain.Instance.settingsManager.getSettingState(SettingID.SHOW_DEBUG_MESSAGES))
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(string));
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(string));
     }
 
     public static void showNonDebugMessage(String string) {
@@ -161,15 +163,15 @@ public class ApecUtils {
     }
 
     /**
-     * @brief This is made since there is this weird character in the purse text that im too lazy to see what unicode it has so now we have this
      * @return Returns a string that has all non numerical characters removed from a string
+     * @brief This is made since there is this weird character in the purse text that im too lazy to see what unicode it has so now we have this
      */
 
     public static String removeNonNumericalChars(String s) {
 
         StringBuilder _s = new StringBuilder();
 
-        for (int i = 0;i < s.length();i++) {
+        for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (Character.isDigit(c) || c == '.') _s.append(c);
         }
@@ -187,7 +189,7 @@ public class ApecUtils {
         int w = 0;
         FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
         for (String _l : l) {
-            int _w =  fr.getStringWidth(_l);
+            int _w = fr.getStringWidth(_l);
             if (w < _w) {
                 w = _w;
             }
@@ -197,12 +199,13 @@ public class ApecUtils {
 
     /**
      * Usually used to ensure compatibility with other mods that replace classes with a child version of it
+     *
      * @param fields = Any field array
-     * @param name = The name that has to be checked
+     * @param name   = The name that has to be checked
      * @return Returns true if there is a field present in the array with the specified name
      */
 
-    public static boolean isNameInFieldList(Field[] fields,String name) {
+    public static boolean isNameInFieldList(Field[] fields, String name) {
         List<String> fieldNames = new ArrayList<String>();
         for (Field f : fields) {
             fieldNames.add(f.getName());
@@ -218,12 +221,12 @@ public class ApecUtils {
      * exist matters.
      */
 
-    public static boolean containedByCharSequence(String s1,String s2) {
+    public static boolean containedByCharSequence(String s1, String s2) {
 
         char[] c = s2.toCharArray();
         char[] s = s1.toCharArray();
         int cIdx = 0;
-        for (int i = 0;i < s.length && cIdx < c.length;i++) {
+        for (int i = 0; i < s.length && cIdx < c.length; i++) {
             if (s[i] == c[cIdx]) cIdx++;
         }
 
@@ -232,12 +235,12 @@ public class ApecUtils {
     }
 
     /**
-     * @param l = A list of strings
+     * @param l     = A list of strings
      * @param regex = Regex
      * @return Returns true if the input string is contained in a string from the list
      */
 
-    public static boolean doesListContainRegex(List<String> l,String regex) {
+    public static boolean doesListContainRegex(List<String> l, String regex) {
         for (String _l : l) {
             if (_l.contains(regex)) return true;
         }
@@ -252,8 +255,8 @@ public class ApecUtils {
     public static String removeFirstSpaces(String s) {
         if (s.equals("")) return s;
         int nonSpaceIdx = 0;
-        for (int i = 0;s.charAt(i) == ' ';i++) {
-            nonSpaceIdx = i+1;
+        for (int i = 0; s.charAt(i) == ' '; i++) {
+            nonSpaceIdx = i + 1;
         }
         return s.substring(nonSpaceIdx);
     }
@@ -263,18 +266,18 @@ public class ApecUtils {
      * @return Returns an ordered list of the input strings by their width
      */
 
-    public static List<String> orderByWidth (List<String> l) {
+    public static List<String> orderByWidth(List<String> l) {
         List<Integer> arr = new ArrayList<Integer>();
         for (String s : l) {
             arr.add(Minecraft.getMinecraft().fontRendererObj.getStringWidth(s));
         }
-        bubbleSort(arr,l);
+        bubbleSort(arr, l);
         return l;
     }
 
 
     // A wise man once said bubble sort is good enough when there are not a lot of elements
-    public static <T> void  bubbleSort(List<Integer> arr,List<T> s) {
+    public static <T> void bubbleSort(List<Integer> arr, List<T> s) {
         int n = arr.size();
         for (int i = 0; i < n - 1; i++)
             for (int j = 0; j < n - i - 1; j++)
@@ -290,13 +293,13 @@ public class ApecUtils {
     }
 
     /**
-     * @brief The function used to draw all ingame gui strings
      * @param s = String to be drawn
      * @param x = x position
      * @param y = y position
      * @param c = color
+     * @brief The function used to draw all ingame gui strings
      */
-    public static void drawThiccBorderString(String s,int x,int y,int c) {
+    public static void drawThiccBorderString(String s, int x, int y, int c) {
         String noColorCodeS = ApecUtils.removeColorCodes(s);
         if (ApecMain.Instance.settingsManager.getSettingState(SettingID.BORDER_TYPE)) {
             Minecraft.getMinecraft().fontRendererObj.drawString(noColorCodeS, x + 1, y, (c >> 24) << 24);
@@ -305,7 +308,7 @@ public class ApecUtils {
             Minecraft.getMinecraft().fontRendererObj.drawString(noColorCodeS, x, y - 1, (c >> 24) << 24);
             Minecraft.getMinecraft().fontRendererObj.drawString(s, x, y, c);
         } else {
-            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(s,x,y,c);
+            Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(s, x, y, c);
         }
     }
 
@@ -314,20 +317,20 @@ public class ApecUtils {
      * @return Returns a tuple containing the lower and upper inventory of the gui linked with the event
      */
 
-    public static Tuple<IInventory,IInventory> GetUpperLowerFromGuiEvent(GuiOpenEvent event) {
+    public static Tuple<IInventory, IInventory> GetUpperLowerFromGuiEvent(GuiOpenEvent event) {
         try {
             /** This is to ensure that there is not an Inner class of the GuiChes class forced by a mod , ughh ughh looking at you Skypixel */
-            String upperFieldName = ApecUtils.unObfedFieldNames.get("upperChestInventory");
-            String lowerFieldName = ApecUtils.unObfedFieldNames.get("lowerChestInventory");
+            String upperFieldName = ApecUtils.unObfedFieldNames.getOrDefault("upperChestInventory", "upperChestInventory");
+            String lowerFieldName = ApecUtils.unObfedFieldNames.getOrDefault("lowerChestInventory", "unObfedFieldNames");
             if (ApecUtils.isNameInFieldList(event.gui.getClass().getDeclaredFields(), upperFieldName) &&
                     ApecUtils.isNameInFieldList(event.gui.getClass().getDeclaredFields(), lowerFieldName)) {
                 IInventory upper = (IInventory) FieldUtils.readDeclaredField(event.gui, upperFieldName, true);
                 IInventory lower = (IInventory) FieldUtils.readDeclaredField(event.gui, lowerFieldName, true);
-                return new Tuple<IInventory, IInventory>(upper,lower);
+                return new Tuple<IInventory, IInventory>(upper, lower);
             } else {
                 IInventory upper = (IInventory) FieldUtils.readField(event.gui, upperFieldName, true);
                 IInventory lower = (IInventory) FieldUtils.readField(event.gui, lowerFieldName, true);
-                return new Tuple<IInventory, IInventory>(upper,lower);
+                return new Tuple<IInventory, IInventory>(upper, lower);
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -346,10 +349,12 @@ public class ApecUtils {
     /**
      * @return A list of vectors that represents the sum of the two inputed list of vectors
      */
-    public static List<Vector2f> AddVecListToList(List<Vector2f> vl1,List<Vector2f> vl2) {
+    public static List<Vector2f> AddVecListToList(List<Vector2f> vl1, List<Vector2f> vl2) {
         assert (vl1.size() < vl2.size());
-        for (int i = 0;i < vl1.size();i++) {
-            vl1.set(i,addVec(vl1.get(i), vl2.get(i)));
+        for (int i = 0; i < vl1.size(); i++) {
+            vl1.set(i,
+                    addVec(vl1.get(i),
+                            vl2.get(i)));
         }
         return vl1;
     }
@@ -358,15 +363,15 @@ public class ApecUtils {
 
     /**
      * @param Seq = The sequence of characters
-     * @param s = The string
+     * @param s   = The string
      * @return Returns a string with the char sequence removed
      */
-    public static String RemoveCharSequence (String Seq,String s) {
+    public static String RemoveCharSequence(String Seq, String s) {
         char[] csq = Seq.toCharArray();
         String result = "";
         int CurrentInSequence = 0;
         boolean SequenceEnded = false;
-        for (int i = 0;i < s.length();i++) {
+        for (int i = 0; i < s.length(); i++) {
             if (!SequenceEnded) {
                 if (csq[CurrentInSequence] == s.charAt(i)) {
                     CurrentInSequence++;
@@ -384,7 +389,7 @@ public class ApecUtils {
      * @return Cuts the decimals to only 2
      */
     public static float ReduceToTwoDecimals(float v) {
-        return (float)((int)(v*100)) / 100.0f;
+        return (float) ((int) (v * 100)) / 100.0f;
     }
 
     public static enum SegmentationOptions {
@@ -396,32 +401,32 @@ public class ApecUtils {
 
     }
 
-    public static String segmentString(String string,String symbol,char leftChar,char rightChar,int allowedInstancesL,int allowedInstancesR, SegmentationOptions... options) {
-        boolean totallyExclusive = false, totallyInclusive = false, allInstancesR = false,allInstancesL = false;
+    public static String segmentString(String string, String symbol, char leftChar, char rightChar, int allowedInstancesL, int allowedInstancesR, SegmentationOptions... options) {
+        boolean totallyExclusive = false, totallyInclusive = false, allInstancesR = false, allInstancesL = false;
         for (SegmentationOptions option : options) {
             if (option == SegmentationOptions.TOTALLY_EXCLUSIVE) totallyExclusive = true;
             if (option == SegmentationOptions.TOTALLY_INCLUSIVE) totallyInclusive = true;
             if (option == SegmentationOptions.ALL_INSTANCES_RIGHT) allInstancesR = true;
             if (option == SegmentationOptions.ALL_INSTANCES_LEFT) allInstancesL = true;
         }
-        return segmentString(string, symbol, leftChar, rightChar, allowedInstancesL, allowedInstancesR, totallyExclusive,totallyInclusive,allInstancesR,allInstancesL);
+        return segmentString(string, symbol, leftChar, rightChar, allowedInstancesL, allowedInstancesR, totallyExclusive, totallyInclusive, allInstancesR, allInstancesL);
     }
 
     /**
-     * @param string = The string you want to extract data from
-     * @param symbol = A string that will act as a pivot
-     * @param leftChar = It will copy all the character from the left of the pivot until it encounters this character
-     * @param rightChar = It will copy all the character from the right of the pivot until it encounters this character
+     * @param string            = The string you want to extract data from
+     * @param symbol            = A string that will act as a pivot
+     * @param leftChar          = It will copy all the character from the left of the pivot until it encounters this character
+     * @param rightChar         = It will copy all the character from the right of the pivot until it encounters this character
      * @param allowedInstancesL = How many times can it encounter the left char before it stops copying the characters
      * @param allowedInstancesR = How many times can it encounter the right char before it stops copying the characters
-     * @param totallyExclusive = Makes so that the substring wont include the character from the left index
+     * @param totallyExclusive  = Makes so that the substring wont include the character from the left index
      * @return Returns the string that is defined by the bounds of leftChar and rightChar encountered allowedInstacesL  respectively allowedInctancesR - 1 within it
-     *         allowedInsracesL only if totallyExclusive = false else allowedInstacesL - 1
+     * allowedInsracesL only if totallyExclusive = false else allowedInstacesL - 1
      */
 
-    public static String segmentString(String string,String symbol,char leftChar,char rightChar,int allowedInstancesL,int allowedInstancesR,boolean totallyExclusive,boolean totallyInclusive,boolean allInstancesR,boolean allInstancesL) {
+    public static String segmentString(String string, String symbol, char leftChar, char rightChar, int allowedInstancesL, int allowedInstancesR, boolean totallyExclusive, boolean totallyInclusive, boolean allInstancesR, boolean allInstancesL) {
 
-        int leftIdx = 0,rightIdx = 0;
+        int leftIdx = 0, rightIdx = 0;
 
         if (string.contains(symbol)) {
 
@@ -470,22 +475,17 @@ public class ApecUtils {
 
     public static int RomanStringToValue(String str) {
         int res = 0;
-        for (int i = 0; i < str.length(); i++)
-        {
+        for (int i = 0; i < str.length(); i++) {
             int s1 = RomanSymbolToValue(str.charAt(i));
-            if (i + 1 < str.length())
-            {
+            if (i + 1 < str.length()) {
                 int s2 = RomanSymbolToValue(str.charAt(i + 1));
                 if (s1 >= s2) {
                     res = res + s1;
-                }
-                else
-                {
+                } else {
                     res = res + s2 - s1;
                     i++;
                 }
-            }
-            else {
+            } else {
                 res = res + s1;
             }
         }
@@ -493,23 +493,23 @@ public class ApecUtils {
     }
 
     /**
-     * @brief Converts values strings which contain values represented in short form (ex: "20k") to float
      * @param s = input string
      * @return Converted output
+     * @brief Converts values strings which contain values represented in short form (ex: "20k") to float
      */
     public static float hypixelShortValueFormattingToFloat(String s) {
-        s = s.replace(",","");
+        s = s.replace(",", "");
         for (String notation : multipleNotations.keySet()) {
             if (s.contains(notation)) {
-                s = s.replace(notation,"");
+                s = s.replace(notation, "");
                 return Float.parseFloat(s) * multipleNotations.get(notation);
             }
         }
         return Float.parseFloat(s);
     }
 
-    public static String applyTagOnUrl(String url,String tag) {
-        return url.replace("__TAG__",tag);
+    public static String applyTagOnUrl(String url, String tag) {
+        return url.replace("__TAG__", tag);
     }
 
     public static List<String> wrappStringToWidth(Minecraft mc, String s, int widthToWrap) {
@@ -538,8 +538,8 @@ public class ApecUtils {
         return lines;
     }
 
-    public static <T> T[] listToArray(List<T> list,Class<T[]> type) {
+    public static <T> T[] listToArray(List<T> list, Class<T[]> type) {
         Object[] arr = list.toArray();
-        return Arrays.copyOf(arr,arr.length,type);
+        return Arrays.copyOf(arr, arr.length, type);
     }
 }

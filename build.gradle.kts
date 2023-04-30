@@ -6,8 +6,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-group = "apec.archloomtemplate"
-version = "1.0.0"
+group = "Apec"
+version = "1.10.3"
 
 // Toolchains:
 java {

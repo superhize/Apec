@@ -24,10 +24,10 @@ public class InfoBox extends GUIComponent {
     float yDecremetor = 0;
 
     public InfoBox() {
-        super(GUIComponentID.INFO_BOX,5);
+        super(GUIComponentID.INFO_BOX,6);
     }
 
-    public int PurseStringLength = 0,BitsLength = 0,ZoneStringLength = 0,DefenceStringLength = 0,TimeStringLength = 0;
+    public int PurseStringLength = 0,BitsLength = 0,ZoneStringLength = 0,DefenceStringLength = 0,TimeStringLength = 0, CoopersLength = 0;
 
     @Override
     public void drawTex(DataExtractor.PlayerStats ps, DataExtractor.ScoreBoardData sd, DataExtractor.OtherData od, ScaledResolution sr, boolean editingMode) {
@@ -59,6 +59,7 @@ public class InfoBox extends GUIComponent {
             if (!ApecMain.Instance.settingsManager.getSettingState(SettingID.USE_DEFENCE_OUT_OF_BB) || editingMode) {
                 gi.drawTexturedModalRect((int) (GuiPos.x + 20 + (subComponentDeltas.get(3).getX()) * oneOverScale + 360),  (GuiPos.y + subComponentDeltas.get(3).getY()) * oneOverScale - 1, 32, 215, 7, 10);
             }
+            gi.drawTexturedModalRect((int) (GuiPos.x + 20 + (subComponentDeltas.get(5).getX()) * oneOverScale + 460),  (GuiPos.y + subComponentDeltas.get(5).getY()) * oneOverScale - 1, 41, 216, 6, 9);
         }
         GlStateManager.scale(1,1,1);
     }
@@ -103,6 +104,7 @@ public class InfoBox extends GUIComponent {
         String zoneText = (UseIcons ? ApecUtils.RemoveCharSequence("\u23E3", sd.Zone) : sd.Zone);
         String defenceText = (UseIcons ? "\u00a7a" + ps.Defence : "\u00a7a" + ps.Defence + " Defence");
         String bitText = (UseIcons ? ApecUtils.RemoveCharSequence("Bits: ",sd.Bits) : sd.Bits);
+        String cooperText = (UseIcons ? ApecUtils.RemoveCharSequence("Copper: ",sd.Coppers) : sd.Coppers);
         boolean inTheCatacombs = ApecMain.Instance.dataExtractor.isInTheCatacombs;
         mc.fontRendererObj.drawString(
                 purseText,
@@ -133,8 +135,16 @@ public class InfoBox extends GUIComponent {
             );
         }
 
+        mc.fontRendererObj.drawString(
+                cooperText,
+                (int) (GuiPos.x + 20 + (subComponentDeltas.get(5).getX() + (UseIcons ? 9 : 0)) * oneOverScale + 460),
+                (int) ((GuiPos.y + subComponentDeltas.get(5).getY()) * oneOverScale),
+                0xffffff, false
+        );
+
         PurseStringLength = mc.fontRendererObj.getStringWidth(purseText);
         BitsLength = mc.fontRendererObj.getStringWidth(bitText);
+        CoopersLength = mc.fontRendererObj.getStringWidth(cooperText);
         ZoneStringLength = mc.fontRendererObj.getStringWidth(zoneText);
         DefenceStringLength = mc.fontRendererObj.getStringWidth(defenceText);
         TimeStringLength = mc.fontRendererObj.getStringWidth(sd.Date + " " + sd.Hour);
@@ -170,6 +180,7 @@ public class InfoBox extends GUIComponent {
             add(new Vector2f(220*scale + 20 * scale, 6*scale));
             add(new Vector2f(360*scale + 20 * scale, 6*scale));
             add(new Vector2f((g_sr.getScaledWidth() - 20), 6*scale));
+            add(new Vector2f(460*scale + 20 * scale, 6*scale));
         }};
     }
 
@@ -178,12 +189,13 @@ public class InfoBox extends GUIComponent {
         final boolean UseIcons = ApecMain.Instance.settingsManager.getSettingState(SettingID.INFO_BOX_ICONS);
         boolean inTheCatacombs = ApecMain.Instance.dataExtractor.isInTheCatacombs;
         final int zoneAddX = (inTheCatacombs ? 5 : 9);
-        List<Vector2f> RelativeVectors = new ArrayList<Vector2f>(4) {{
+        List<Vector2f> RelativeVectors = new ArrayList<Vector2f>() {{
             add(new Vector2f(PurseStringLength  + (UseIcons ? 9 : 0)*scale, 10*scale));
             add(new Vector2f( BitsLength + (UseIcons ? 9 : 0)*scale, 10*scale));
             add(new Vector2f(ZoneStringLength + (UseIcons ? zoneAddX : 0)*scale, 10*scale));
             add(new Vector2f(DefenceStringLength + (UseIcons ? 10 : 0)*scale, 10*scale));
             add(new Vector2f(-TimeStringLength-(getCurrentAnchorPoint().x)*scale, 10*scale));
+            add(new Vector2f( CoopersLength + (UseIcons ? 9 : 0)*scale, 10*scale));
             // Since the x is relative to the side of the screen and not the parent's x position i removed it's relativity
             // I can do that since the bottom bar cannot be moved so no wack shit is going to happen
         }};

@@ -66,7 +66,7 @@ public class PotionFetcher {
         MinecraftForge.EVENT_BUS.register(this);
         Method[] methods = GuiContainer.class.getDeclaredMethods();
         for (Method m : methods) {
-            if (m.getName().equals(ApecUtils.getUnObfedMethodNames.get("handleMouseClick"))) {
+            if (m.getName().equals(ApecUtils.getUnObfedMethodNames.getOrDefault("handleMouseClick", "handleMouseClick"))) {
                 HandleMouseClickMethod = m;
                 HandleMouseClickMethod.setAccessible(true);
                 break;
