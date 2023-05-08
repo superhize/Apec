@@ -29,7 +29,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-@SuppressWarnings("all")
+
 public class DataExtractor {
 
     private Minecraft mc = Minecraft.getMinecraft();
@@ -471,12 +471,10 @@ public class DataExtractor {
                 usesPiggyBank = true;
             }
             else if (RepresentsBits(line)) {
-                //System.out.println("bitsering");
                 sd.Bits = ApecUtils.removeFirstSpaces(line);
                 BitsHaveBeenSet = true;
             }
             else if(RepresentsCooper(line)){
-               // System.out.println("trueing");
                 sd.Coppers = ApecUtils.removeFirstSpaces(line);
             }
             else if (!line.contains("www")) {
