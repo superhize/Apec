@@ -1,29 +1,56 @@
-# Architectury Loom based template for 1.8.9 forge mods
+# Apec
+###### A Gui improvment mod for Hypixel 
 
-**For other templates, do check out the [other branches of this repository](https://github.com/romangraef/Forge1.8.9Template/branches/all)**
+This is a small (not so small now) project I've been working on. It changes the in-game GUI to better suit skyblock, for example:
 
-To get started, clone this repository and replace all references to `examplemod` or `com.example` with your own names.
+* Implementation of a hp and mp bar
+* Removes the scoreboard and everything that was displayed in it it's now shown is a much more appealing way
+* An inventory traffic list
+* Removed the rendering of the hunger & health bar
+* Shows potion effects on the screen
+* Warning icons that appear for things like Trade requests, Inventory Full, Too many coins on you, and other stuff
+* Custom NPC GUIS
 
-If you don't want mixins (which allow for modifying vanilla code), then you can remove the references to mixins from
-the `build.gradle.kts`, delete the `mixins.examplemod.json` and the `com.example.mixin` package.
+___
 
-This project uses [DevAuth](https://github.com/DJtheRedstoner/DevAuth) per default, so you can log in using your real
-minecraft account. If you don't need that, you can remove it from the buildscript.
+#### Overview Screenshots
+![](https://hypixel.net/attachments/jkh-png.1857496/)
+![](https://hypixel.net/attachments/png.1857497/)
+![](https://hypixel.net/attachments/png.1866595/)
 
-To run the mod you will need two JDKs, one Java 17 jdk and one Java 1.8 jdk. You can download those
-from [here](https://adoptium.net/temurin/releases) (or use your own downloads).
+___
 
-When you import your project into IntelliJ, you need to set the gradle jvm to the Java 17 JDK in the gradle tab, and the
-Project SDK to the Java 1.8 JDK. Then click on the sync button in IntelliJ, and it should create a run task
-called `Minecraft Client`. If it doesn't then try relaunching your IntelliJ. **Warning for Mac users**: You might have to remove the `-XStartOnFirstThread` vm argument from your run configuration. In the future, that should be handled by the plugin, but for now you'll probably have to do that manually. 
+#### Skill XP
 
-To export your project, run the `gradle build` task, and give other people the
-file `build/libs/<modid>-<version>-all.jar`
+![](https://hypixel.net/attachments/newf-png.1983499/)
+![](https://hypixel.net/attachments/png.1857500/)
 
-### For those who have not an attention span
+___
 
-[![Youtube Tutorial](https://i.ytimg.com/vi/nWzHlomdCgc/maxresdefault.jpg)](https://www.youtube.com/watch?v=nWzHlomdCgc)
+#### Air
 
-## Licensing
+![](https://hypixel.net/attachments/iolu-png.1857516/)
 
-This template is licensed under the Unlicense (license copy present in this repository), or alternatively under [Creative Commons 1.0 Universal (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/), and all contributions and PR to this template are expected to follow this. This means your mod, based on this template can be licensed whatever way you want, and does not need to reference back to this template in any way.
+___
+
+#### Other Things
+
+![](https://hypixel.net/attachments/56-png.1857517/)
+![](https://hypixel.net/attachments/u675-png.1857518/)
+![](https://hypixel.net/attachments/45w-png.1857519/)
+
+___
+
+#### Warning Icons
+
+![](https://hypixel.net/attachments/png.1857520/)
+
+### Note! 
+* The GUI can be toggled on/off with [right ctrl] and the settings menu can be opened using the [M] key.
+* It only has support for Forge version 1.8.9.
+* You can toggle on/off the GUI anywhere but it will only work correctly on Hypixel Skyblock.
+
+If you find a bug or have any problems with the mod you can either:
+* Join our [Discord](https://discord.gg/YXrJzpY)  where you can also post ideas for future versions.
+* Submit an issue here on [Github](https://github.com/BananaFructa/Apec/issues)
+* Direct message me (BananaFructa) on the forums
