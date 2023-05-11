@@ -18,7 +18,9 @@ java {
 loom {
     log4jConfigs.from(file("log4j2.xml"))
     launchConfigs {
-        "client" {}
+        "client" {
+            arg("--tweakClass", "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker")
+        }
     }
     forge {
         pack200Provider.set(dev.architectury.pack200.java.Pack200Adapter())
@@ -36,6 +38,7 @@ repositories {
     maven("https://repo.spongepowered.org/maven/")
     // If you don't want to log in with your real minecraft account, remove this line
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+    maven("repo.polyfrost.cc/releases")
 }
 
 val shadowImpl: Configuration by configurations.creating {
@@ -47,6 +50,9 @@ dependencies {
     mappings("de.oceanlabs.mcp:mcp_stable:22-1.8.9")
     forge("net.minecraftforge:forge:1.8.9-11.15.1.2318-1.8.9")
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.0")
+
+    compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.2.0-alpha+") // Should not be included in jar
+    shadowImpl("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+") // Should be included in jar
 
 }
 
@@ -61,6 +67,9 @@ tasks.withType(Jar::class) {
     manifest.attributes.run {
         this["FMLCorePluginContainsFMLMod"] = "true"
         this["ForceLoadAsMod"] = "true"
+        this["ModSide"] = "CLIENT"
+        this["TweakOrder"] = 0
+        this["TweakClass"] = "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker"
     }
 }
 
