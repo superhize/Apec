@@ -8,6 +8,7 @@ import Apec.Components.Gui.CustomItemToolTip;
 import Apec.Components.Gui.GuiIngame.GUIModifier;
 import Apec.Components.Gui.Menu.SettingsMenu.ApecMenu;
 import Apec.Components.Gui.Menu.TexturePackMenu.TexturePackRegistryViewer;
+import Apec.Config.ApecConfig;
 import Apec.DataInterpretation.ComponentSaveManager;
 import Apec.DataInterpretation.ContainerGuiManager;
 import Apec.DataInterpretation.DataExtractor;
@@ -49,6 +50,7 @@ public class ApecMain
     public static final String version = "1.10.3";
 
     public static ApecMain Instance;
+    public static ApecConfig config;
 
     /** Key for toggling the gui */
     KeyBinding guiKey = new KeyBinding("Apec Gui", Keyboard.KEY_RCONTROL, "Apec");
@@ -68,7 +70,7 @@ public class ApecMain
     public String newestVersion = "";
 
     /** List of all the components present, removing any of these removes the feature from the mod */
-    public List<Component> components = new ArrayList<Component>() {{
+    public static List<Component> components = new ArrayList<Component>() {{
         add(new GUIModifier()); // The gui ingame interface
         add(new ApecMenu()); // The settings menu
         add(new TexturePackRegistryViewer());
@@ -92,6 +94,7 @@ public class ApecMain
     public void init(FMLInitializationEvent event)
     {
         Instance = this;
+        config = new ApecConfig();
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(inventorySubtractor);
         MinecraftForge.EVENT_BUS.register(dataExtractor);
@@ -119,6 +122,7 @@ public class ApecMain
         }
     }
 
+    //TODO: remove when finished porting to oneconfig
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
         if (guiKey.isPressed()) {
@@ -132,7 +136,7 @@ public class ApecMain
      * @param componentId = The id of component which has to be found
      * @return Returns the component with the same id, null if none was found
      */
-    public <U extends Component> U getComponent(ComponentId componentId) {
+    public static <U extends Component> U getComponent(ComponentId componentId) {
         for (Component component : components) {
             if (component.componentId == componentId) return (U)component;
         }
