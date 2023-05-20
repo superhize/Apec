@@ -71,6 +71,7 @@ public class GUIModifier extends Component {
         add(new EventLister());
         add(new AbilityText());
         add(new BossBar());
+        add(new RiftTime());
     }};
 
     public GUIModifier() {

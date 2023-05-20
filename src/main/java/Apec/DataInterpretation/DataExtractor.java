@@ -4,11 +4,11 @@
 package Apec.DataInterpretation;
 
 import Apec.ApecMain;
-import Apec.Utils.ApecUtils;
 import Apec.ComponentId;
 import Apec.Components.Gui.GuiIngame.GUIModifier;
 import Apec.EventIDs;
 import Apec.Settings.SettingID;
+import Apec.Utils.ApecUtils;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -39,7 +39,7 @@ public class DataExtractor {
     private final char DfSymbol = '\u2748';
     private final char MnSymbol = '\u270e';
     private final char OverflowSymbol = '\u02ac';
-    private final char[] healDurationSymbols = new char[] { '\u2586', '\u2585', '\u2584', '\u2583', '\u2582', '\u2581' };
+    private final char[] healDurationSymbols = new char[]{'\u2586', '\u2585', '\u2584', '\u2583', '\u2582', '\u2581'};
 
     private final String endRaceSymbol = "THE END RACE";
     private final String woodRacingSymbol = "WOODS RACING";
@@ -62,10 +62,10 @@ public class DataExtractor {
     private int lastMn = 1, lastBaseMn = 1;
     private int lastDefence = 0;
     private int baseAp = 0;
-    private int lastAp = 1 , lastBaseAp = 1;
+    private int lastAp = 1, lastBaseAp = 1;
     private int baseOp = 1;
 
-    private String lastHour = "",lastDate = "",lastZone = "";
+    private String lastHour = "", lastDate = "", lastZone = "";
 
     private String lastSkillXp = "";
     private String lastPurse = "";
@@ -99,7 +99,7 @@ public class DataExtractor {
 
     private int tradeTicks = 0;
 
-    String actionBarData  = ""; // Holds the data that is in the action bar
+    String actionBarData = ""; // Holds the data that is in the action bar
     String footerTabData = ""; // Holds the data that is in the
 
     private PlayerStats playerStats;
@@ -110,35 +110,38 @@ public class DataExtractor {
     public boolean isInSkyblock = false; // This flag is true if the player is in skyblock
 
     // The priority is set on highest so the data is getting parsed before it's modified by sba
-    /** Gets the action bar data and looks in the chat for trades */
+
+    /**
+     * Gets the action bar data and looks in the chat for trades
+     */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMsg(ClientChatReceivedEvent event) {
         if (
                 (event.message.getUnformattedText().contains(String.valueOf(HpSymbol))
-                || event.message.getUnformattedText().contains(String.valueOf(MnSymbol))
-                || event.message.getUnformattedText().contains(reviveSymbol)
-                || event.message.getUnformattedText().contains(chickenRaceSymbol)) // For some reason this race doesn't show the mana
-                || event.message.getUnformattedText().contains(armadilloName)
+                        || event.message.getUnformattedText().contains(String.valueOf(MnSymbol))
+                        || event.message.getUnformattedText().contains(reviveSymbol)
+                        || event.message.getUnformattedText().contains(chickenRaceSymbol)) // For some reason this race doesn't show the mana
+                        || event.message.getUnformattedText().contains(armadilloName)
         ) {
             IsDeadInTheCatacombs = event.message.getUnformattedText().contains(reviveSymbol);
             actionBarData = event.message.getUnformattedText();
             /** used for sampling data when developing
-            try {
-                File f = new File("config/Apec/debug");
-                f.createNewFile();
-                FileWriter fw = new FileWriter(f,true);
-                char[] c = actionBarData.toCharArray();
-                fw.write('\n' + actionBarData + ' ');
-                for (char c_ : c) {
-                    fw.write(Integer.toString((int)c_));
-                    fw.write(' ');
-                }
-                fw.write('\n');
-                fw.close();
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }*/
-        } else if (!event.message.getUnformattedText().contains("<") && !isFromChat(event.message.getFormattedText())){
+             try {
+             File f = new File("config/Apec/debug");
+             f.createNewFile();
+             FileWriter fw = new FileWriter(f,true);
+             char[] c = actionBarData.toCharArray();
+             fw.write('\n' + actionBarData + ' ');
+             for (char c_ : c) {
+             fw.write(Integer.toString((int)c_));
+             fw.write(' ');
+             }
+             fw.write('\n');
+             fw.close();
+             } catch (IOException exception) {
+             exception.printStackTrace();
+             }*/
+        } else if (!event.message.getUnformattedText().contains("<") && !isFromChat(event.message.getFormattedText())) {
 
             String msg = ApecUtils.removeAllCodes(event.message.getUnformattedText());
             if (msg.contains(sendTradeRequestMsg)) hasSentATradeRequest = true;
@@ -156,6 +159,7 @@ public class DataExtractor {
 
     // The priority is on lowest since the gui swapping that happens if sidebar mod swiched it happens on priority low
     boolean UpdateThisTick = false;
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTick(TickEvent.ClientTickEvent event) {
         UpdateThisTick = !UpdateThisTick;
@@ -219,7 +223,7 @@ public class DataExtractor {
      */
 
     public List<String> addDataFixesScoreboard(List<String> s) {
-        for (String _s: s) {
+        for (String _s : s) {
             if (_s.contains("[") && !_s.contains("]")) _s.concat("\u00a7]");
         }
         return s;
@@ -231,19 +235,19 @@ public class DataExtractor {
      */
 
     public boolean ShouldHaveSpaceBefore(String s) {
-        return ApecUtils.containedByCharSequence(s,"Objective") || //Objectives
-               ApecUtils.containedByCharSequence(s,"Contest") || // Jacob's contest
-               ApecUtils.containedByCharSequence(s,"Year") || // New year and the vote thing
-               ApecUtils.containedByCharSequence(s,"Zoo") || // Traveling Zoo
-               ApecUtils.containedByCharSequence(s,"Festival") || // Spooky Festival
-               ApecUtils.containedByCharSequence(s,"Season") || // Jerry season
-               ApecUtils.containedByCharSequence(s,"Election") || // Idk at this point im just putting some things from the wiki
-               ApecUtils.containedByCharSequence(s,"Slayer") || // Slayer quest
-               ApecUtils.containedByCharSequence(s,"Keys") || // Keys in dungeons
-               ApecUtils.containedByCharSequence(s,"Time Elapsed") || // time elapsed dungeons
-               ApecUtils.containedByCharSequence(s,"Starting in:") ||
-               ApecUtils.containedByCharSequence(s,"Wave") ||
-               ApecUtils.containedByCharSequence(s,"Festival");
+        return ApecUtils.containedByCharSequence(s, "Objective") || //Objectives
+                ApecUtils.containedByCharSequence(s, "Contest") || // Jacob's contest
+                ApecUtils.containedByCharSequence(s, "Year") || // New year and the vote thing
+                ApecUtils.containedByCharSequence(s, "Zoo") || // Traveling Zoo
+                ApecUtils.containedByCharSequence(s, "Festival") || // Spooky Festival
+                ApecUtils.containedByCharSequence(s, "Season") || // Jerry season
+                ApecUtils.containedByCharSequence(s, "Election") || // Idk at this point im just putting some things from the wiki
+                ApecUtils.containedByCharSequence(s, "Slayer") || // Slayer quest
+                ApecUtils.containedByCharSequence(s, "Keys") || // Keys in dungeons
+                ApecUtils.containedByCharSequence(s, "Time Elapsed") || // time elapsed dungeons
+                ApecUtils.containedByCharSequence(s, "Starting in:") ||
+                ApecUtils.containedByCharSequence(s, "Wave") ||
+                ApecUtils.containedByCharSequence(s, "Festival");
     }
 
     /**
@@ -252,7 +256,7 @@ public class DataExtractor {
      */
 
     public boolean ShouldHaveSpaceAfter(String s) {
-        return ApecUtils.containedByCharSequence(s,"Dungeon Cleared"); // Dungeon cleared in dungeons
+        return ApecUtils.containedByCharSequence(s, "Dungeon Cleared"); // Dungeon cleared in dungeons
     }
 
     /**
@@ -261,7 +265,7 @@ public class DataExtractor {
      */
 
     public boolean RepresentsIRLDate(String s) {
-        return ApecUtils.containedByCharSequence(s,"//");
+        return ApecUtils.containedByCharSequence(s, "//");
     }
 
     /**
@@ -270,14 +274,14 @@ public class DataExtractor {
      */
 
     public boolean RepresentsDate(String s) {
-        return (ApecUtils.containedByCharSequence(s,"Autumn") ||
-                ApecUtils.containedByCharSequence(s,"Winter") ||
-                ApecUtils.containedByCharSequence(s,"Spring") ||
-                ApecUtils.containedByCharSequence(s,"Summer")) &&
-                (ApecUtils.containedByCharSequence(s,"st") ||
-                 ApecUtils.containedByCharSequence(s,"nd") ||
-                 ApecUtils.containedByCharSequence(s,"rd") ||
-                 ApecUtils.containedByCharSequence(s,"th"));
+        return (ApecUtils.containedByCharSequence(s, "Autumn") ||
+                ApecUtils.containedByCharSequence(s, "Winter") ||
+                ApecUtils.containedByCharSequence(s, "Spring") ||
+                ApecUtils.containedByCharSequence(s, "Summer")) &&
+                (ApecUtils.containedByCharSequence(s, "st") ||
+                        ApecUtils.containedByCharSequence(s, "nd") ||
+                        ApecUtils.containedByCharSequence(s, "rd") ||
+                        ApecUtils.containedByCharSequence(s, "th"));
     }
 
     /**
@@ -286,11 +290,11 @@ public class DataExtractor {
      */
 
     public boolean RepresentsTime(String s) {
-        return (ApecUtils.containedByCharSequence(s,"am") ||
-                ApecUtils.containedByCharSequence(s,"pm")) &&
-                ApecUtils.containedByCharSequence(s,":") &&
-                (ApecUtils.containedByCharSequence(s,"\u263d") || // The moon
-                ApecUtils.containedByCharSequence(s,"\u2600")); // The sun
+        return (ApecUtils.containedByCharSequence(s, "am") ||
+                ApecUtils.containedByCharSequence(s, "pm")) &&
+                ApecUtils.containedByCharSequence(s, ":") &&
+                (ApecUtils.containedByCharSequence(s, "\u263d") || // The moon
+                        ApecUtils.containedByCharSequence(s, "\u2600")); // The sun
     }
 
     /**
@@ -299,7 +303,7 @@ public class DataExtractor {
      */
 
     public boolean RepresentsZone(String s) {
-        return ApecUtils.containedByCharSequence(s,"\u23E3");
+        return ApecUtils.containedByCharSequence(s, "\u23E3");
     }
 
     /**
@@ -308,7 +312,7 @@ public class DataExtractor {
      */
 
     public boolean RepresentsPurse(String s) {
-        return ApecUtils.containedByCharSequence(s,"Purse: ");
+        return ApecUtils.containedByCharSequence(s, "Purse: ");
     }
 
     /**
@@ -316,8 +320,8 @@ public class DataExtractor {
      * @return Return true if the input string represents the purse with a piggy equipped
      */
 
-    public boolean RepresentsPiggy(String s){
-        return ApecUtils.containedByCharSequence(s,"Piggy: ");
+    public boolean RepresentsPiggy(String s) {
+        return ApecUtils.containedByCharSequence(s, "Piggy: ");
     }
 
     /**
@@ -325,7 +329,7 @@ public class DataExtractor {
      * @return Return true if the input string represents the bits counter
      */
     public boolean RepresentsBits(String s) {
-        return ApecUtils.containedByCharSequence(s,"Bits: ");
+        return ApecUtils.containedByCharSequence(s, "Bits: ");
     }
 
     /**
@@ -333,8 +337,9 @@ public class DataExtractor {
      * @return Return true if the input string represents the coppers counter
      */
     public boolean RepresentsCooper(String s) {
-        return ApecUtils.containedByCharSequence(s,"Copper: ");
+        return ApecUtils.containedByCharSequence(s, "Copper: ");
     }
+
     /**
      * ScoreBoardData - Contains the things that used to be displayed in the scoreboard
      * -server
@@ -351,11 +356,11 @@ public class DataExtractor {
 
             isInTheCatacombs = false;
 
-            for (int i = 0;i < scoreBoardLines.size();i++){
-                if (ApecUtils.containedByCharSequence(scoreBoardLines.get(size-i).toLowerCase(),clearedName)) {
+            for (int i = 0; i < scoreBoardLines.size(); i++) {
+                if (ApecUtils.containedByCharSequence(scoreBoardLines.get(size - i).toLowerCase(), clearedName)) {
                     isInTheCatacombs = true;
                 }
-                if (ApecUtils.containedByCharSequence(scoreBoardLines.get(size-i).toLowerCase(),combatZoneName) && !scoreBoardLines.get(size-i).toLowerCase().contains("to")) {
+                if (ApecUtils.containedByCharSequence(scoreBoardLines.get(size - i).toLowerCase(), combatZoneName) && !scoreBoardLines.get(size - i).toLowerCase().contains("to")) {
                     isInTheCatacombs = true;
                 }
 
@@ -378,20 +383,21 @@ public class DataExtractor {
         }
     }
 
-    /** Thanks for this very cool
+    /**
+     * Thanks for this very cool
      * From https://gist.github.com/aaron1998ish/33c4e1836bd5cf79501d163a1b5c8304
-     *
+     * <p>
      * Fetching lines are based on how they're visually seen on your sidebar
      * and not based on the actual value score.
-     *
+     * <p>
      * Written around Minecraft 1.8 Scoreboards, modify to work with your
      * current version of Minecraft.
-     *
+     * <p>
      * <3 aaron1998ish
      *
      * @return a list of lines for a given scoreboard or empty
-     *         if the worlds not loaded, scoreboard isnt present
-     *         or if the sidebar objective isnt created.
+     * if the worlds not loaded, scoreboard isnt present
+     * or if the sidebar objective isnt created.
      */
     public List<String> getSidebarLines() {
 
@@ -408,7 +414,7 @@ public class DataExtractor {
         }
 
         Collection<Score> scores = scoreboard.getSortedScores(objective);
-        List<Score> list = Lists.newArrayList(Iterables.filter(scores,new Predicate<Score>()  {
+        List<Score> list = Lists.newArrayList(Iterables.filter(scores, new Predicate<Score>() {
             public boolean apply(Score s) {
                 return s.getPlayerName() != null;
             }
@@ -444,10 +450,10 @@ public class DataExtractor {
 
     /**
      * @param sd = Current ScoreBoardData class
-     * @param l = All the lines of the scoreboard
+     * @param l  = All the lines of the scoreboard
      */
 
-    private void ScoreboardParser(ScoreBoardData sd,List<String> l) {
+    private void ScoreboardParser(ScoreBoardData sd, List<String> l) {
 
         boolean BitsHaveBeenSet = false;
         boolean CoopersHaveBeenSet = false;
@@ -458,26 +464,21 @@ public class DataExtractor {
                 if (line.contains("\u00a78") && ApecMain.Instance.settingsManager.getSettingState(SettingID.SHOW_CURRENT_SERVER)) {
                     sd.ExtraInfo.add("Currently in: " + ApecUtils.segmentString(scoreBoardLines.get(scoreBoardLines.size() - 1), "\u00a78", '\u00a7', '~', 1, 1, ApecUtils.SegmentationOptions.TOTALLY_INCLUSIVE));
                 }
-            }
-            else if (RepresentsDate(line)) sd.Date = ApecUtils.removeFirstSpaces(line);
+            } else if (RepresentsDate(line)) sd.Date = ApecUtils.removeFirstSpaces(line);
             else if (RepresentsTime(line)) sd.Hour = ApecUtils.removeFirstSpaces(line);
             else if (RepresentsZone(line)) sd.Zone = ApecUtils.removeFirstSpaces(line);
             else if (RepresentsPurse(line)) {
                 sd.Purse = ApecUtils.removeFirstSpaces(line);
                 usesPiggyBank = false;
-            }
-            else if (RepresentsPiggy(line)) {
+            } else if (RepresentsPiggy(line)) {
                 sd.Purse = ApecUtils.removeFirstSpaces(line);
                 usesPiggyBank = true;
-            }
-            else if (RepresentsBits(line)) {
+            } else if (RepresentsBits(line)) {
                 sd.Bits = ApecUtils.removeFirstSpaces(line);
                 BitsHaveBeenSet = true;
-            }
-            else if(RepresentsCooper(line)){
+            } else if (RepresentsCooper(line)) {
                 sd.Coppers = ApecUtils.removeFirstSpaces(line);
-            }
-            else if (!line.contains("www")) {
+            } else if (!line.contains("www")) {
                 if (line.replaceAll("[^a-zA-Z0-9]", "").length() != 0) {
                     if (ShouldHaveSpaceBefore(line)) sd.ExtraInfo.add(" ");
                     sd.ExtraInfo.add(ApecUtils.removeFirstSpaces(line));
@@ -491,7 +492,7 @@ public class DataExtractor {
 
     }
 
-    public ScoreBoardData getScoreBoardData () {
+    public ScoreBoardData getScoreBoardData() {
         return this.scoreBoardData;
     }
 
@@ -505,7 +506,7 @@ public class DataExtractor {
      * -air
      */
 
-    private PlayerStats ProcessPlayerStats () {
+    private PlayerStats ProcessPlayerStats() {
         PlayerStats playerStats = new PlayerStats();
 
         try {
@@ -571,9 +572,9 @@ public class DataExtractor {
         try {
             // Overflow mana
             {
-                String segmentedString = ApecUtils.segmentString(actionBarData,String.valueOf(OverflowSymbol),'\u00a7',OverflowSymbol,1,1);
+                String segmentedString = ApecUtils.segmentString(actionBarData, String.valueOf(OverflowSymbol), '\u00a7', OverflowSymbol, 1, 1);
                 if (segmentedString != null) {
-                    int value = Integer.parseInt(ApecUtils.removeAllCodes(segmentedString.replace(",","")));
+                    int value = Integer.parseInt(ApecUtils.removeAllCodes(segmentedString.replace(",", "")));
                     playerStats.Op = value;
                     if (baseOp < value) {
                         baseOp = value;
@@ -596,11 +597,11 @@ public class DataExtractor {
                 char ticker = '\0';
                 for (char _c : healDurationSymbols) {
                     ticker = _c;
-                    segmentedSrtring = ApecUtils.segmentString(actionBarData,String.valueOf(_c),'+',_c,1,1);
+                    segmentedSrtring = ApecUtils.segmentString(actionBarData, String.valueOf(_c), '+', _c, 1, 1);
                     if (segmentedSrtring != null) break;
                 }
                 if (segmentedSrtring != null) {
-                    playerStats.HealDuration = Integer.parseInt(ApecUtils.removeAllCodes(segmentedSrtring).replace("+","")); //remove all codes for safety
+                    playerStats.HealDuration = Integer.parseInt(ApecUtils.removeAllCodes(segmentedSrtring).replace("+", "")); //remove all codes for safety
                     playerStats.HealDurationTicker = ticker;
                 } else {
                     playerStats.HealDuration = 0;
@@ -652,9 +653,9 @@ public class DataExtractor {
 
         try {
             // ABILITY
-            String segmentedString = ApecUtils.segmentString(actionBarData, ")",'\u00a7',' ',3,1);
+            String segmentedString = ApecUtils.segmentString(actionBarData, ")", '\u00a7', ' ', 3, 1);
             if (segmentedString != null) {
-                if (segmentedString.contains("-") && actionBarData.contains(String.valueOf(MnSymbol)) /* This is to make sure that the data is indeed from the action bar */ ) {
+                if (segmentedString.contains("-") && actionBarData.contains(String.valueOf(MnSymbol)) /* This is to make sure that the data is indeed from the action bar */) {
                     playerStats.IsAbilityShown = true;
                     playerStats.AbilityText = segmentedString;
                 }
@@ -668,7 +669,7 @@ public class DataExtractor {
             {
                 String segmentedString = ApecUtils.segmentString(actionBarData, String.valueOf(DfSymbol), '\u00a7', DfSymbol, 2, 1);
                 if (segmentedString != null) {
-                    playerStats.Defence = Integer.parseInt(ApecUtils.removeAllCodes(segmentedString.replace(",","")));
+                    playerStats.Defence = Integer.parseInt(ApecUtils.removeAllCodes(segmentedString.replace(",", "")));
                     lastDefence = playerStats.Defence;
                 } else if (!actionBarData.contains(endRaceSymbol) &&
                         !actionBarData.contains(woodRacingSymbol) &&
@@ -704,9 +705,9 @@ public class DataExtractor {
     float praseSkillPercentage(String skillInfo) {
         if (skillInfo == null) return -1f;
         if (skillInfo.contains("%")) {
-            skillInfo = skillInfo.replace("%","");
+            skillInfo = skillInfo.replace("%", "");
             return Float.parseFloat(skillInfo) / 100f;
-        } else if (skillInfo.contains("/")){
+        } else if (skillInfo.contains("/")) {
             String[] twoValues = skillInfo.split("/");
             float first = ApecUtils.hypixelShortValueFormattingToFloat(twoValues[0]);
             float second = ApecUtils.hypixelShortValueFormattingToFloat(twoValues[1]);
@@ -715,36 +716,37 @@ public class DataExtractor {
         return -1f;
     }
 
-    public PlayerStats getPlayerStats () {
+    public PlayerStats getPlayerStats() {
         return this.playerStats;
     }
 
     /**
      * Other Data Processing - This contains data that appears in special contexts that aren't really that big to have their own functions and what not
      * In extra info ###
-     *    -potion effects
-     *    -trials of fire
-     *    -wood race
-     *    -the end race
-     *    -secrets
-     *    etc.
+     * -potion effects
+     * -trials of fire
+     * -wood race
+     * -the end race
+     * -secrets
+     * etc.
      */
 
-    private OtherData ProcessOtherData (ScoreBoardData sd) {
+    private OtherData ProcessOtherData(ScoreBoardData sd) {
         OtherData otherData = new OtherData();
         if (actionBarData == null ? true : isFromChat(actionBarData)) return otherData;
-        String endRace = ApecUtils.segmentString(actionBarData,endRaceSymbol,'\u00a7',' ',2,2);
-        String woodRacing = ApecUtils.segmentString(actionBarData,woodRacingSymbol,'\u00a7',' ',2,2);
-        String dps = ApecUtils.segmentString(actionBarData,dpsSymbol,'\u00a7',' ',1,1);
-        String sec = ApecUtils.segmentString(actionBarData,secSymbol,'\u00a7',' ',1,2);
-        String secrets = ApecUtils.segmentString(actionBarData,secretSymbol,'\u00a7','\u00a7',1,1);
-        String chickenRace = ApecUtils.segmentString(actionBarData,chickenRaceSymbol,'\u00a7',' ',2,2);
-        String jump = ApecUtils.segmentString(actionBarData,jumpSymbol,'\u00a7','\u00a7',3,1);
-        String crystalRace = ApecUtils.segmentString(actionBarData,crystalRaceSymbol,'\u00a7',' ',2,2);
-        String mushroomRace = ApecUtils.segmentString(actionBarData,giantMushroomSymbol,'\u00a7',' ',2,2);
-        String precursorRace = ApecUtils.segmentString(actionBarData,precursorRuinsSymbol,'\u00a7',' ',2,2);
+        String endRace = ApecUtils.segmentString(actionBarData, endRaceSymbol, '\u00a7', ' ', 2, 2);
+        String woodRacing = ApecUtils.segmentString(actionBarData, woodRacingSymbol, '\u00a7', ' ', 2, 2);
+        String dps = ApecUtils.segmentString(actionBarData, dpsSymbol, '\u00a7', ' ', 1, 1);
+        String sec = ApecUtils.segmentString(actionBarData, secSymbol, '\u00a7', ' ', 1, 2);
+        String secrets = ApecUtils.segmentString(actionBarData, secretSymbol, '\u00a7', '\u00a7', 1, 1);
+        String chickenRace = ApecUtils.segmentString(actionBarData, chickenRaceSymbol, '\u00a7', ' ', 2, 2);
+        String jump = ApecUtils.segmentString(actionBarData, jumpSymbol, '\u00a7', '\u00a7', 3, 1);
+        String crystalRace = ApecUtils.segmentString(actionBarData, crystalRaceSymbol, '\u00a7', ' ', 2, 2);
+        String mushroomRace = ApecUtils.segmentString(actionBarData, giantMushroomSymbol, '\u00a7', ' ', 2, 2);
+        String precursorRace = ApecUtils.segmentString(actionBarData, precursorRuinsSymbol, '\u00a7', ' ', 2, 2);
 
-        if ((endRace != null || woodRacing != null || dps != null || sec != null) && !otherData.ExtraInfo.isEmpty()) otherData.ExtraInfo.add(" ");
+        if ((endRace != null || woodRacing != null || dps != null || sec != null) && !otherData.ExtraInfo.isEmpty())
+            otherData.ExtraInfo.add(" ");
 
         if (endRace != null) otherData.ExtraInfo.add(endRace);
         if (woodRacing != null) otherData.ExtraInfo.add(woodRacing);
@@ -763,7 +765,7 @@ public class DataExtractor {
         if (precursorRace != null) otherData.ExtraInfo.add(precursorRace);
 
         if (actionBarData.contains(armadilloName)) {
-            String segmentEnergy = ApecUtils.segmentString(actionBarData,"/",'\u00a7','\0' /*placeholder*/,2,1, ApecUtils.SegmentationOptions.TOTALLY_INCLUSIVE);
+            String segmentEnergy = ApecUtils.segmentString(actionBarData, "/", '\u00a7', '\0' /*placeholder*/, 2, 1, ApecUtils.SegmentationOptions.TOTALLY_INCLUSIVE);
             if (segmentEnergy != null) {
                 String[] values = ApecUtils.removeAllCodes(segmentEnergy).split("/");
                 otherData.ArmadilloEnergy = Integer.parseInt(values[0]);
@@ -772,7 +774,7 @@ public class DataExtractor {
         }
 
         if (actionBarData.contains(treasureMetalDetectorSymbol)) {
-            String segmentedString = ApecUtils.segmentString(actionBarData,treasureMetalDetectorSymbol,'\u00a7','m',2,1, ApecUtils.SegmentationOptions.TOTALLY_INCLUSIVE);
+            String segmentedString = ApecUtils.segmentString(actionBarData, treasureMetalDetectorSymbol, '\u00a7', 'm', 2, 1, ApecUtils.SegmentationOptions.TOTALLY_INCLUSIVE);
             if (segmentedString != null) {
                 otherData.ExtraInfo.add(segmentedString);
             }
@@ -799,7 +801,7 @@ public class DataExtractor {
      * @return A list of the current events (see EventIDs.class for the events)
      */
 
-    private ArrayList<EventIDs> getEvents (ScoreBoardData sd) {
+    private ArrayList<EventIDs> getEvents(ScoreBoardData sd) {
         ArrayList<EventIDs> events = new ArrayList<EventIDs>();
 
         if (ApecMain.Instance.settingsManager.getSettingState(SettingID.SHOW_WARNING)) {
@@ -807,7 +809,7 @@ public class DataExtractor {
                 if (mc.thePlayer != null) if (isInvFull()) events.add(EventIDs.INV_FULL);
                 if (sd.Purse != null) {
                     String purse = ApecUtils.removeAllCodes(sd.Purse);
-                    if (purse.contains("(")) purse = purse.substring(0,purse.indexOf("("));
+                    if (purse.contains("(")) purse = purse.substring(0, purse.indexOf("("));
                     purse = ApecUtils.removeNonNumericalChars(purse);
                     if (!purse.equals("")) {
                         if (Float.parseFloat(purse) >= 5000000f && !usesPiggyBank) events.add(EventIDs.COIN_COUNT);
@@ -834,7 +836,7 @@ public class DataExtractor {
      * @return Retuns the effects of the player
      */
 
-    private List<String> getPlayerEffects () {
+    private List<String> getPlayerEffects() {
 
         try {
             List<String> effects = new ArrayList<String>();
@@ -862,9 +864,9 @@ public class DataExtractor {
      * @return Returns true if the inventory of the player is full
      */
 
-    private boolean isInvFull () {
+    private boolean isInvFull() {
         InventoryPlayer ip = mc.thePlayer.inventory;
-        for (int i = 0;i < 36;i++) {
+        for (int i = 0; i < 36; i++) {
             if (ip.getStackInSlot(i) == null) return false;
         }
         return true;
@@ -884,9 +886,9 @@ public class DataExtractor {
      * @return From two integers divide by '/' (ex 230/500) it returns the vale and the base value (ex 230 is the value and 500 is the base value)
      */
 
-    public Tuple<Integer,Integer> formatStringFractI(String s) {
-        String[] tempSplit = s.replace(",","").split("/");
-        return new Tuple<Integer, Integer>(Integer.parseInt(tempSplit[0]),Integer.parseInt(tempSplit[1]));
+    public Tuple<Integer, Integer> formatStringFractI(String s) {
+        String[] tempSplit = s.replace(",", "").split("/");
+        return new Tuple<Integer, Integer>(Integer.parseInt(tempSplit[0]), Integer.parseInt(tempSplit[1]));
     }
 
     // Use with caution
@@ -923,6 +925,7 @@ public class DataExtractor {
         public int Mp;
         public int BaseMp;
         public int Defence;
+        public int Xp;
         public String SkillInfo;
         public float SkillExpPercentage;
         public boolean SkillIsShown;
@@ -932,7 +935,7 @@ public class DataExtractor {
 
     public class OtherData {
 
-        public ArrayList<String> ExtraInfo  = new ArrayList<String>();
+        public ArrayList<String> ExtraInfo = new ArrayList<String>();
         public ArrayList<EventIDs> currentEvents = new ArrayList<EventIDs>();
         public int ArmadilloEnergy;
         public int ArmadilloBaseEnergy;

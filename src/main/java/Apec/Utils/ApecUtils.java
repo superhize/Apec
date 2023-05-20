@@ -23,7 +23,7 @@ public class ApecUtils {
     /**
      * If you are in a fml workspace set this variable to true
      */
-    public static boolean inFMLFramework = false;
+    public static boolean inFMLFramework = true;
 
     private static String[] colorCodes = {"\u00a70", "\u00a71", "\u00a72", "\u00a73", "\u00a74", "\u00a75", "\u00a76", "\u00a77", "\u00a78", "\u00a79", "\u00a7a", "\u00a7b", "\u00a7c", "\u00a7d", "\u00a7e", "\u00a7f"};
 
@@ -321,7 +321,7 @@ public class ApecUtils {
         try {
             /** This is to ensure that there is not an Inner class of the GuiChes class forced by a mod , ughh ughh looking at you Skypixel */
             String upperFieldName = ApecUtils.unObfedFieldNames.getOrDefault("upperChestInventory", "upperChestInventory");
-            String lowerFieldName = ApecUtils.unObfedFieldNames.getOrDefault("lowerChestInventory", "unObfedFieldNames");
+            String lowerFieldName = ApecUtils.unObfedFieldNames.getOrDefault("lowerChestInventory", "lowerChestInventory");
             if (ApecUtils.isNameInFieldList(event.gui.getClass().getDeclaredFields(), upperFieldName) &&
                     ApecUtils.isNameInFieldList(event.gui.getClass().getDeclaredFields(), lowerFieldName)) {
                 IInventory upper = (IInventory) FieldUtils.readDeclaredField(event.gui, upperFieldName, true);
@@ -541,5 +541,26 @@ public class ApecUtils {
     public static <T> T[] listToArray(List<T> list, Class<T[]> type) {
         Object[] arr = list.toArray();
         return Arrays.copyOf(arr, arr.length, type);
+    }
+
+    public static String formatTime(String seconds) {
+        int totalSeconds = Integer.parseInt(seconds);
+
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int remainingSeconds = totalSeconds % 60;
+
+        StringBuilder formattedTime = new StringBuilder();
+        if (hours > 0) {
+            formattedTime.append(hours).append("h");
+        }
+        if (minutes > 0) {
+            formattedTime.append(minutes).append("m");
+        }
+        if (remainingSeconds > 0) {
+            formattedTime.append(remainingSeconds).append("s");
+        }
+
+        return formattedTime.toString();
     }
 }
