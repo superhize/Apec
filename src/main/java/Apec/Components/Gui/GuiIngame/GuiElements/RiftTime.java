@@ -23,12 +23,21 @@ public class RiftTime extends TextComponent {
         super.draw(ps,sd,od,sr,editingMode);
         GlStateManager.pushMatrix();
         if (ApecMain.Instance.settingsManager.getSettingState(SettingID.RIFT_TIME)) {
-            GlStateManager.scale(scale, scale, scale);
-            Vector2f StatBar = ApecUtils.scalarMultiply(getCurrentAnchorPoint(),oneOverScale);
-            String timeString = ApecUtils.formatTime(String.valueOf(this.mc.thePlayer.experienceLevel));
-            ApecUtils.drawThiccBorderString(timeString, (int) (StatBar.x - mc.fontRendererObj.getStringWidth(timeString)), (int) (StatBar.y - 10), 0xd10808);
-            stringWidth = mc.fontRendererObj.getStringWidth(timeString);
+            DataExtractor de = new DataExtractor();
+            boolean inRift = false;
+            for(String line : de.getSidebarLines()){
+                if(ApecUtils.removeAllCodes(line).toLowerCase().contains("rift dimensio")){ // why
+                    inRift = true;
+                }
+            }
 
+            if(inRift){
+                GlStateManager.scale(scale, scale, scale);
+                Vector2f StatBar = ApecUtils.scalarMultiply(getCurrentAnchorPoint(),oneOverScale);
+                String timeString = ApecUtils.formatTime(String.valueOf(this.mc.thePlayer.experienceLevel));
+                ApecUtils.drawThiccBorderString(timeString, (int) (StatBar.x - mc.fontRendererObj.getStringWidth(timeString)), (int) (StatBar.y - 10), 0xd10808);
+                stringWidth = mc.fontRendererObj.getStringWidth(timeString);
+            }
         }
         GlStateManager.popMatrix();
     }

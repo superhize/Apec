@@ -109,6 +109,7 @@ public class DataExtractor {
 
     public boolean isInSkyblock = false; // This flag is true if the player is in skyblock
 
+
     // The priority is set on highest so the data is getting parsed before it's modified by sba
 
     /**
@@ -166,6 +167,7 @@ public class DataExtractor {
         if (UpdateThisTick) {
             try {
                 String s = getScoreBoardTitle();
+
                 if (!s.equals("")) {
                     this.isInSkyblock = ApecUtils.removeAllCodes(s).toLowerCase().contains("skyblock");
                     if (wasInTheCatacombs ^ isInTheCatacombs) {
