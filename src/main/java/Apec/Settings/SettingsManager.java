@@ -36,11 +36,11 @@ public class SettingsManager {
         add(new Setting(ALWAYS_SHOW_SKILL,false));
         add(new Setting(SHOW_WARNING,true));
         add(new Setting(INVENTORY_TRAFFIC,true));
-        add(new Setting(SHOW_POTIONS_EFFECTS,true));
+       // add(new Setting(SHOW_POTIONS_EFFECTS,true));
         add(new Setting(COMPACT_POTION,false));
         //add(new Setting(HIDE_NIGHT_VISION,false));
         add(new Setting(CUSTOM_TOOL_TIP,true));
-        add(new Setting(SHOW_EFFECTS_AS_IN_TAB,true));
+        //add(new Setting(SHOW_EFFECTS_AS_IN_TAB,true));
         add(new Setting(SHOW_CURRENT_SERVER,false));
         add(new Setting(ITEM_HIGHLIGHT_TEXT,false));
         add(new Setting(NPC_GUI,true));
@@ -60,6 +60,7 @@ public class SettingsManager {
         //add(new Setting(OVERWRITE_GUI,false));
         add(new Setting(SHOW_DEBUG_MESSAGES,false));
         add(new Setting(RIFT_TIME, true));
+        add(new Setting(HIDE_HEALTH_BAR, false));
     }};
 
     /** Hashmap that holds the titles and descriptions of each setting */
@@ -105,6 +106,7 @@ public class SettingsManager {
         put(BB_ON_TOP,new Tuple<String,String>("Info bar on top","Puts the info bar on top instead of on the bottom"));
         put(CUSTOM_TOOL_TIP,new Tuple<String,String>("Custom tool tip","Shows extra icons above the item tool tip."));
         put(RIFT_TIME, new Tuple<String, String>("Rift time", "Render rift time when in the rift dimensiob"));
+        put(HIDE_HEALTH_BAR, new Tuple<String, String>("Hide Vanilla Health bar", ""));
     }};
 
     /** Cache for setting states */

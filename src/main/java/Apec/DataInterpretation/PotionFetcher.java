@@ -25,28 +25,28 @@ import java.util.List;
 /** All the code in this class is used only if the full potion effects list is shown */
 public class PotionFetcher {
 
-    Minecraft mc = Minecraft.getMinecraft();
+/*    Minecraft mc = Minecraft.getMinecraft();
 
-    /** Was the effects list fetched */
+    *//** Was the effects list fetched *//*
     public boolean IsInitilized = false;
-    /** True if the initial fetch was not done */
+    *//** True if the initial fetch was not done *//*
     public boolean NeedsInitialFetch = true;
-    /** True if potion effects are displayed */
+    *//** True if potion effects are displayed *//*
     public boolean ShouldRun = false;
-    /** True if the effects are being currently fetched from the effects menu */
+    *//** True if the effects are being currently fetched from the effects menu *//*
     public boolean InLoadingProcess = false;
-    /** Last gui open event that was triggered */
+    *//** Last gui open event that was triggered *//*
     private GuiOpenEvent CurrentEvent;
 
-    /** The data extractor */
+    *//** The data extractor *//*
     DataExtractor dataExtractor;
 
-    /** Method got from reflection from the GuiScreen class of the function handleMouseClick */
+    *//** Method got from reflection from the GuiScreen class of the function handleMouseClick *//*
     private Method HandleMouseClickMethod;
 
-    /**
+    *//**
      * Class which holds the data of a potion effect
-     */
+     *//*
     class PotionEffect {
 
         public String effectName;
@@ -58,9 +58,9 @@ public class PotionFetcher {
 
     List<PotionEffect> PotionEffects = new ArrayList<PotionEffect>();
 
-    /**
+    *//**
      * @param dataExtractor = The main data extractor
-     */
+     *//*
     public PotionFetcher(DataExtractor dataExtractor) {
         this.dataExtractor = dataExtractor;
         MinecraftForge.EVENT_BUS.register(this);
@@ -74,17 +74,17 @@ public class PotionFetcher {
         }
     }
 
-    /**
+    *//**
      * @brief Initialization for new fetch cycle
-     */
+     *//*
     public void init() {
         mc.thePlayer.sendChatMessage("/effects");
         IsInitilized = true;
     }
 
-    /**
+    *//**
      * @brief Reloads the data
-     */
+     *//*
     public void DumpAndLoad() {
         ClearAll();
         init();
@@ -111,11 +111,11 @@ public class PotionFetcher {
         }
     }
 
-    /**
+    *//**
      * @brief Adds a new potion effect
      * @param name = The name of the effect
      * @param UnregularSplitedTime = Time text split by the character ':'
-     */
+     *//*
     private void CreateNewPotionEffect(String name,String[] UnregularSplitedTime) {
         int h = 0, m = 0, s = 0;
         int I =  1;
@@ -155,9 +155,9 @@ public class PotionFetcher {
         PotionEffects.add(potionEffect);
     }
 
-    /**
+    *//**
      * @return Returns a list of all the potion effects in text form
-     */
+     *//*
     public List<String> GetPotionEffects (){
         List<String> Effects = new ArrayList<String>();
         for (int i = 0;i < PotionEffects.size();i++) {
@@ -178,10 +178,10 @@ public class PotionFetcher {
         return Effects;
     }
 
-    /**
+    *//**
      * @param Effect = The potion effect which needs to be converted
      * @return Returns the potion effect in text form
-     */
+     *//*
     public String PotionToString(PotionEffect Effect) {
         return Effect.effectName
                 + " \u00a7f"
@@ -190,9 +190,9 @@ public class PotionFetcher {
                 + (Effect.secondsRemaining < 10 ? "0" : "") + Effect.secondsRemaining;
     }
 
-    /**
+    *//**
      * @brief Cleared the potion effects list
-     */
+     *//*
     public void ClearAll() {
         if (IsInitilized) {
             IsInitilized = false;
@@ -205,14 +205,14 @@ public class PotionFetcher {
 
     @SubscribeEvent
     public void OnTick(TickEvent.ClientTickEvent tickEvent) {
-        try {
+       *//* try {
                 ShouldRun = ApecMain.Instance.settingsManager.getSettingState(SettingID.SHOW_POTIONS_EFFECTS) &&
                         !ApecMain.Instance.settingsManager.getSettingState(SettingID.SHOW_EFFECTS_AS_IN_TAB) &&
                         ApecMain.Instance.dataExtractor.isInSkyblock;
         } catch (Exception err) {
             ShouldRun = false;
             err.printStackTrace();
-        }
+        }*//*
 
         if (ShouldRun) {
 
@@ -294,9 +294,9 @@ public class PotionFetcher {
 
     }
 
-    /**
+    *//**
      * @brief Used to detect when the player drinks milk so that the potion list is deleted
-     */
+     *//*
     @SubscribeEvent
     public void OnDrink(PlayerUseItemEvent.Finish event) {
         if (ShouldRun) {
@@ -316,6 +316,6 @@ public class PotionFetcher {
                 InLoadingProcess = true;
             }
         }
-    }
+    }*/
 
 }

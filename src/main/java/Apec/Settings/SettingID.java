@@ -43,6 +43,8 @@ public enum SettingID {
     BB_ON_TOP,
     CUSTOM_TOOL_TIP,
     SHOW_OP_BAR,
-    RIFT_TIME
+    RIFT_TIME,
+
+    HIDE_HEALTH_BAR
 
 }

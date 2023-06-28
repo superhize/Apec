@@ -33,7 +33,7 @@ import java.util.List;
 public class DataExtractor {
 
     private Minecraft mc = Minecraft.getMinecraft();
-    public PotionFetcher potionFetcher = new PotionFetcher(this);
+    //public PotionFetcher potionFetcher = new PotionFetcher(this);
 
     private final char HpSymbol = '\u2764';
     private final char DfSymbol = '\u2748';
@@ -172,7 +172,7 @@ public class DataExtractor {
                     this.isInSkyblock = ApecUtils.removeAllCodes(s).toLowerCase().contains("skyblock");
                     if (wasInTheCatacombs ^ isInTheCatacombs) {
                         wasInTheCatacombs = isInTheCatacombs;
-                        potionFetcher.ClearAll();
+                        //potionFetcher.ClearAll();
                     }
                 }
             } catch (Exception e) {
@@ -782,7 +782,7 @@ public class DataExtractor {
             }
         }
 
-        if (ApecMain.Instance.settingsManager.getSettingState(SettingID.SHOW_POTIONS_EFFECTS)) {
+        /*if (ApecMain.Instance.settingsManager.getSettingState(SettingID.SHOW_POTIONS_EFFECTS)) {
 
             List<String> effects = getPlayerEffects();
             if (!effects.isEmpty()) {
@@ -790,7 +790,7 @@ public class DataExtractor {
                 otherData.ExtraInfo.addAll(effects);
             }
 
-        }
+        }*/
 
         otherData.currentEvents = getEvents(sd);
 
@@ -838,7 +838,7 @@ public class DataExtractor {
      * @return Retuns the effects of the player
      */
 
-    private List<String> getPlayerEffects() {
+    /*private List<String> getPlayerEffects() {
 
         try {
             List<String> effects = new ArrayList<String>();
@@ -860,7 +860,7 @@ public class DataExtractor {
         } catch (Exception err) {
             return new ArrayList<String>();
         }
-    }
+    }*/
 
     /**
      * @return Returns true if the inventory of the player is full

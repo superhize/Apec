@@ -176,17 +176,6 @@ public class ApecGuiIngameForge extends GuiIngameForge {
         }
     }
 
-    @Override
-    public void renderHealth(int width, int height) {
-        try {
-            if ((Boolean) pre.invoke(this,HEALTH)) return;
-            mc.mcProfiler.startSection("health");
-            mc.mcProfiler.endSection();
-            post.invoke(this,HEALTH);
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-    }
 
     @Override
     public void renderFood(int width, int height) {
